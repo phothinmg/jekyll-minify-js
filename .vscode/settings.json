@@ -1,0 +1,18 @@
+{
+  // Formatting
+
+  "ruby.format": "rufo",
+  "editor.formatOnSave": true,
+
+  // Run Rufo via Bundler when available
+  "ruby.rufo.useBundler": true,
+
+  // Keep RuboCop linting enabled (optional) and run via Bundler
+  "ruby.lint": {
+    "rubocop": true
+  },
+  "ruby.lint.rubocop": {
+    "lintOnSave": true,
+    "config": ".rubocop.yml"
+  }
+}

@@ -1,0 +1,15 @@
+AllCops:
+  TargetRubyVersion: 3.4.8
+  NewCops: enable
+  Exclude:
+    - "docs/**"
+    - "vendor/**"
+    - "node_modules/**"
+
+# keep line length reasonable for pages
+Layout/LineLength:
+  Max: 120
+
+# Keep the useless assignment cop enabled so you see those warnings
+Lint/UselessAssignment:
+  Enabled: true
