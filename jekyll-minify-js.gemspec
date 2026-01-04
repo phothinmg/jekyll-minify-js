@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
-Gem::Specification.new do |ptm|
-  ptm.required_ruby_version = '>= 3.4.8'
-  ptm.name = 'jekyll-minify-js'
-  ptm.version = Jekyll::MinifyJs::VERSION
-  ptm.authors = ['Pho Thin Maung']
-  ptm.summary = 'Jekyll plugin for Minify Js.'
-  ptm.email = 'phothinmg@disroot.org'
-  ptm.files = [*Dir['lib/**/*.rb'], 'LICENSE']
-  ptm.homepage = 'https://rubygems.org/gems/hola'
-  ptm.license = 'ISC'
-  ptm.metadata['rubygems_mfa_required'] = 'true'
-
-  ptm.add_dependency 'jekyll', '~> 4.4'
-  ptm.add_dependency 'terser', '~> 1.2'
+Gem::Specification.new do |s|
+  s.required_ruby_version = '>= 3.4.8'
+  s.name = 'jekyll-minify-js'
+  s.version = '0.1.0'
+  s.authors = ['Pho Thin Maung']
+  s.summary = 'Jekyll plugin for Minify Js.'
+  s.email = 'phothinmg@disroot.org'
+  s.files = [*Dir['lib/**/*.rb'], 'LICENSE']
+  s.homepage = 'https://rubygems.org/gems/hola'
+  s.license = 'ISC'
+  s.metadata['rubygems_mfa_required'] = 'true'
+  s.add_dependency 'fileutils', '~> 1.8'
+  s.add_dependency 'jekyll', '~> 4.4'
+  s.add_dependency 'pathname', '~> 0.4.0'
+  s.add_dependency 'shellwords', '~> 0.2.2'
+  s.add_dependency 'terser', '~> 1.2'
 end

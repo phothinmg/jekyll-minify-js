@@ -14,6 +14,7 @@ GEM
     execjs (2.10.0)
     ffi (1.17.3)
     ffi (1.17.3-x86_64-linux-gnu)
+    fileutils (1.8.0)
     forwardable-extended (2.6.0)
     http_parser.rb (0.8.1)
     i18n (1.14.8)
@@ -51,6 +52,7 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
+    pathname (0.4.0)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     prism (1.7.0)
@@ -78,13 +80,13 @@ GEM
       parser (>= 3.3.7.2)
       prism (~> 1.7)
     ruby-progressbar (1.13.0)
-    rufo (0.18.2)
     safe_yaml (1.0.5)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    shellwords (0.2.2)
     terser (1.2.6)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (3.2.0)
@@ -97,9 +99,11 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  fileutils (~> 1.8)
   jekyll (~> 3.10)
+  pathname (~> 0.4.0)
   rubocop (~> 1.82)
-  rufo (~> 0.18.2)
+  shellwords (~> 0.2.2)
   terser (~> 1.2)
 
 BUNDLED WITH

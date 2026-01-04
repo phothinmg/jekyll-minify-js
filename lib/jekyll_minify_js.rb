@@ -12,8 +12,10 @@ require 'pathname'
 
 # module Jekyll
 module Jekyll
-   module MinifyJs
-     class TerserGenerator < Generator
+  # MinifyJs is a Jekyll `Generator` that minifies JavaScript files found under
+  # common asset directories. It prefers the `terser` Ruby gem when available
+  # and falls back to an external `terser` CLI when necessary.
+  class MinifyJs < Generator
     safe true
     priority :low
 
@@ -30,8 +32,8 @@ module Jekyll
       src_dir = candidates.find { |p| Dir.exist?(p) }
       return unless src_dir
 
-      # Read configuration from _config.yml under `terser:` key
-      cfg = site.config.fetch('terser', {})
+      # Read configuration from _config.yml under `minify_js:` key
+      cfg = site.config.fetch('minify_js', {})
       return if cfg.key?('enabled') && cfg['enabled'] == false
 
       dest_dir = File.join(site.dest, cfg.fetch('output_dir', 'assets/js'))
@@ -103,7 +105,5 @@ module Jekyll
 
       nil
     end
-  end
-
   end
 end
