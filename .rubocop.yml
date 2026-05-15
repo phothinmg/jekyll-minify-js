@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 3.4.8
+  TargetRubyVersion: 3.1
   NewCops: enable
   Exclude:
     - "docs/**"
@@ -13,3 +13,7 @@ Layout/LineLength:
 # Keep the useless assignment cop enabled so you see those warnings
 Lint/UselessAssignment:
   Enabled: true
+# snake_case file name exclusions
+Naming/FileName:
+  Enabled: true
+  Exclude: ["lib/**/*"]

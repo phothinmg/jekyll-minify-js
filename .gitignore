@@ -1,2 +1,6 @@
 # Build output
 *.gem
+ptm
+# add bundle source
+vendor/bundle/
+.bundle/

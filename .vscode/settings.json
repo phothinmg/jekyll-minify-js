@@ -13,5 +13,6 @@
     "excludedPatterns": ["**/test/**/*.rb"],
     "excludedGems": ["rubocop", "rubocop-performance"],
     "excludedMagicComments": ["compiled:true"]
-  }
+  },
+  "cSpell.words": ["mtimes"]
 }

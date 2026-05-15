@@ -2,63 +2,70 @@
 
 require 'jekyll'
 require 'fileutils'
-require 'shellwords'
-begin
-  require 'terser'
-rescue LoadError
-  # terser gem not available; plugin will fallback to external CLI or copy
-end
-require 'pathname'
+require 'terser'
+
+require_relative 'version'
+require_relative 'color'
 
 # module Jekyll
 module Jekyll
-  # MinifyJs is a Jekyll `Generator` that minifies JavaScript files found under
-  # common asset directories. It prefers the `terser` Ruby gem when available
-  # and falls back to an external `terser` CLI when necessary.
-  class MinifyJs < Generator
-    safe true
-    priority :low
+  # module Jekyll::MinifyJs
+  module MinifyJs
+    # class Jekyll::MinifyJs:TerserGenerator
+    class TerserGenerator < Jekyll::Generator
+      safe true
+      priority :low
 
-    def generate(_site)
-      # Work is done in the :post_write hook to avoid Jekyll overwriting outputs.
-    end
+      def generate(_site)
+        # Work is done in the :post_write hook to avoid Jekyll overwriting outputs.
+      end
 
-    def self.run(site) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-      # Support both repository-root layout and app/ layout.
-      candidates = [
-        File.join(site.source, 'assets', 'js'),
-        File.join(site.source, 'app', 'assets', 'js')
-      ]
-      src_dir = candidates.find { |p| Dir.exist?(p) }
-      return unless src_dir
+      def self.run(site) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+        config = site.config['minify_js'] || {}
+        # disable to skip minification
+        return if config['enable'] && config['enable'] == false
 
-      # Read configuration from _config.yml under `minify_js:` key
-      cfg = site.config.fetch('minify_js', {})
-      return if cfg.key?('enabled') && cfg['enabled'] == false
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        # Build options from config
+        compress_opt = config['compress'] || true
+        mangle_opt = config['mangle'] || true
+        source_map_enabled = config['source_map'] || true
 
-      dest_dir = File.join(site.dest, cfg.fetch('output_dir', 'assets/js'))
-      FileUtils.mkdir_p(dest_dir)
+        Jekyll.logger.info ''
+        Jekyll.logger.info set_color(96, "Running Jekyll MinifyJs v#{Jekyll::MinifyJs::VERSION}", 1)
 
-      terser_available = defined?(Terser)
+        entry_dir = config['entry_dir'] || 'js'
+        out_dir = config['output_dir'] || 'js'
 
-      # Build options from config
-      compress_opt = cfg.fetch('compress', true)
-      mangle_opt = cfg.fetch('mangle', true)
-      source_map_enabled = cfg.fetch('source_map', true)
-      exclude_patterns = cfg.fetch('exclude', ['**/*.min.js'])
+        if config['entry_dir']
+          Jekyll.logger.info "Entry  : #{File.join(site.source, config['entry_dir'])}"
+        else
+          Jekyll.logger.info "Entry  : No entry_dir found, look in #{File.join(site.source, 'js')}"
+        end
 
-      Dir.glob(File.join(src_dir, '**', '*.js')).each do |src| # rubocop:disable Metrics/BlockLength
-        rel = Pathname.new(src).relative_path_from(Pathname.new(src_dir)).to_s
-        out = File.join(dest_dir, rel)
-        out_dir = File.dirname(out)
-        FileUtils.mkdir_p(out_dir)
-        map_name = "#{File.basename(out)}.map"
+        if config['output_dir']
+          Jekyll.logger.info "Output : #{File.join(site.dest, config['output_dir'])}"
+        else
+          Jekyll.logger.info "Output : No output_dir found, write to #{File.join(site.dest, 'js')}"
+        end
 
-        # Skip excluded files
-        next if exclude_patterns.any? { |pat| File.fnmatch(pat, rel) }
+        entry_dir_full = File.join(site.source, entry_dir)
+        out_dir_full = File.join(site.dest, out_dir)
+        js_files = Dir.glob(File.join(entry_dir_full, '**', '*.js'))
 
-        if terser_available
-          Jekyll.logger.info 'Terser:', "minifying #{rel} via terser Ruby gem"
+        Jekyll.logger.warn 'MinifyJs:', "Entry directory not found: #{entry_dir_full}" unless Dir.exist?(entry_dir_full)
+        if Dir.exist?(entry_dir_full) && js_files.empty?
+          Jekyll.logger.info 'MinifyJs:',
+                             "No JavaScript files found in #{entry_dir_full}"
+        end
+
+        FileUtils.mkdir_p(out_dir_full)
+
+        js_files.each do |src|
+          rel = src.sub(/\A#{Regexp.escape(entry_dir_full + File::SEPARATOR)}/, '')
+          out = File.join(out_dir_full, rel)
+          map_name = "#{File.basename(out)}.map"
+
           begin
             src_content = File.open(src, 'r:BOM|UTF-8', &:read)
             options = {}
@@ -80,30 +87,15 @@ module Jekyll
             Jekyll.logger.warn 'Terser:', "ruby terser failed for #{rel}: #{e.message}; copying original"
             FileUtils.cp(src, out)
           end
-        else
-          terser_cmd = new.detect_terser_cmd
-          if terser_cmd
-            cmd = %(#{terser_cmd} #{Shellwords.escape(src)} --compress --mangle -o #{Shellwords.escape(out)} --source-map "url='#{map_name}',includeSources") # rubocop:disable Layout/LineLength
-            Jekyll.logger.info 'Terser:', "minifying #{rel} via external terser"
-            success = system(cmd)
-            unless success && File.exist?(out)
-              Jekyll.logger.warn 'Terser:', "minify failed for #{rel}; copying original"
-              FileUtils.cp(src, out)
-            end
-          else
-            Jekyll.logger.warn 'Terser:', 'no terser available — copying original JS'
-            FileUtils.cp(src, out)
-          end
         end
+
+        elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at
+        Jekyll.logger.info set_color(92, format('Done in %.2fs', elapsed), 1)
       end
     end
-
-    def detect_terser_cmd
-      # Prefer the bundler-installed terser (from the `terser` gem) via `bundle exec terser`.
-      return 'bundle exec terser' if system('bundle exec terser --version > /dev/null 2>&1')
-      return 'terser' if system('terser --version > /dev/null 2>&1')
-
-      nil
-    end
   end
+end
+
+Jekyll::Hooks.register :site, :post_write do |site|
+  Jekyll::MinifyJs::TerserGenerator.run(site)
 end

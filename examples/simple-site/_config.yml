@@ -1,8 +1,0 @@
-title: Simple Example Site
-plugins:
-  - jekyll-minify-js
-
-minify_js:
-  enabled: true
-  output_dir: assets/js
-  source_map: true
