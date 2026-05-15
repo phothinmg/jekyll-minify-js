@@ -3,7 +3,7 @@
 <p align="center">
 <img src="https://github.com/phothinmg/jekykll-pagefind/blob/main/rubygems_logo.png" width="160" height="160" alt="ruby"/>
 </p>
-<h1 align="center">JJekyll Minify Js</h1>
+<h1 align="center">Jekyll Minify Js</h1>
 
 Jekyll plugin that minifies JavaScript files with Terser after the site is written.
 
