@@ -1,6 +1,6 @@
 SHELL := bash
 
-.PHONY: format lint build
+.PHONY: format lint build publish
 
 format:
 	bundle exec rufo .
@@ -10,3 +10,7 @@ lint:
 
 build:
 	gem build jekyll-minify-js.gemspec
+
+publish:
+	bash bin/publish
+
