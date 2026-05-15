@@ -1,3 +1,4 @@
+require 'logger'
 # frozen_string_literal: true
 
 require 'jekyll'
@@ -27,9 +28,9 @@ module Jekyll
 
         started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         # Build options from config
-        compress_opt = config['compress'] || true
-        mangle_opt = config['mangle'] || true
-        source_map_enabled = config['source_map'] || true
+        compress_opt = config.fetch('compress', true)
+        mangle_opt = config.fetch('mangle', true)
+        source_map_enabled = config.fetch('source_map', true)
 
         Jekyll.logger.info ''
         Jekyll.logger.info set_color(96, "Running Jekyll MinifyJs v#{Jekyll::MinifyJs::VERSION}", 1)
@@ -80,7 +81,9 @@ module Jekyll
               compiled = Terser.compile(src_content, options)
               map = nil
             end
-            compiled += "\n//# sourceMappingURL=#{map_name}\n" unless compiled.include?('sourceMappingURL')
+            if source_map_enabled && !compiled.include?('sourceMappingURL')
+              compiled += "\n//# sourceMappingURL=#{map_name}\n"
+            end
             File.write(out, compiled)
             File.write("#{out}.map", map) if map
           rescue StandardError => e

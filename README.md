@@ -1,84 +1,117 @@
-jekyll-minify-js
-=================
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
+<p align="center">
+<img src="https://github.com/phothinmg/jekykll-pagefind/blob/main/rubygems_logo.png" width="160" height="160" alt="ruby"/>
+</p>
+<h1 align="center">JJekyll Minify Js</h1>
 
-A small Jekyll plugin that minifies JavaScript files found under common asset
-directories during site builds. The plugin prefers the `terser` Ruby gem when
-available and falls back to an external `terser` CLI if necessary. When no
-minifier is available, original JS files are copied through unchanged.
+Jekyll plugin that minifies JavaScript files with Terser after the site is written.
 
-**Features**
+## Features
 
-- Minifies `.js` files under `assets/js` or `app/assets/js` (whichever exists).
-- Uses the `terser` Ruby gem when installed, otherwise tries an external
-	`terser` CLI (e.g., npm-installed `terser`).
-- Emits source maps when enabled in configuration.
-- Skips files matching configured exclude patterns (default: `**/*.min.js`).
+- Minifies all `.js` files from a configurable source directory.
+- Writes minified output into a configurable destination directory.
+- Generates source maps by default.
+- Falls back to copying the original file if minification fails.
 
-Installation
-------------
+## Requirements
 
-1. Add the gem to your site's `Gemfile` and run `bundle install`:
+- Ruby 3.1+
+- Jekyll 4.4+
 
-	 gem 'jekyll-minify-js'
+## Installation
 
-2. Enable the plugin in your `_config.yml` (Jekyll 3.5+):
+Add the gem to your Jekyll site's `Gemfile`:
 
-	 plugins:
-		 - jekyll-minify-js
+```ruby
+gem 'jekyll-minify-js'
+```
 
-Or, for older Jekyll versions, add the gem name to the `gems:` list instead.
+Then install dependencies:
 
-Usage
------
+```sh
+bundle install
+```
 
-On `jekyll build` the plugin will look for a source JS directory and produce
-minified output into your site's destination directory. It searches for the
-first directory that exists in this list:
+## Configuration
 
-- `assets/js`
-- `app/assets/js`
+Add a `minify_js` section to `_config.yml`:
 
-Configuration
--------------
-
-Add a `minify_js:` section to `_config.yml` to control behavior. All options
-are optional and shown here with their defaults:
-
+```yml
 minify_js:
-	enabled: true          # set to false to disable the plugin
-	output_dir: assets/js  # destination directory under the site `dest`
-	compress: true         # enable terser compress option
-	mangle: true           # enable terser mangle option
-	source_map: true       # emit source maps alongside minified files
-	exclude:               # glob patterns to skip (relative to source js dir)
-		- "**/*.min.js"
+  enable: true
+  entry_dir: js
+  output_dir: js
+  compress: true
+  mangle: true
+  source_map: true
+```
 
-Examples
---------
+### Options
 
-Given a source file `assets/js/app.js`, after a build you will find the
-minified file at `_site/assets/js/app.js` and, if enabled, the source map at
-`_site/assets/js/app.js.map`.
+| Option       | Type    | Default | Description                                                          |
+| ------------ | ------- | ------- | -------------------------------------------------------------------- |
+| `enable`     | boolean | `true`  | Set to `false` to skip minification.                                 |
+| `entry_dir`  | string  | `js`    | Directory inside your source site containing input JavaScript files. |
+| `output_dir` | string  | `js`    | Directory inside `_site` where minified files are written.           |
+| `compress`   | boolean | `true`  | Enables Terser compression.                                          |
+| `mangle`     | boolean | `true`  | Enables Terser name mangling.                                        |
+| `source_map` | boolean | `true`  | Generates `.map` files and appends `sourceMappingURL`.               |
 
-Requirements
-------------
+## How It Works
 
-- The plugin itself has no hard dependency on the `terser` gem — it will work
-	without it by attempting to call an external `terser` binary. For best
-	results install either:
+During Jekyll's `post_write` hook, the plugin:
 
-	- the `terser` Ruby gem (preferred), or
-	- the `terser` CLI (npm package `terser`) available on your PATH.
+1. Reads JavaScript files from `entry_dir`.
+2. Minifies each file with Terser.
+3. Writes the result to `_site/output_dir`.
+4. Writes a source map when `source_map` is enabled.
+5. Copies the original file if Terser raises an error for that file.
 
-Development
------------
+Directory structure example:
 
-Contributions and bug reports are welcome. The repository includes the source
-under `lib/jekyll_minify_js.rb`. Please open issues or PRs for feature
-requests, bug fixes, or documentation improvements.
+```text
+your-site/
+  js/
+    app.js
+    vendor/
+      search.js
+  _site/
+    js/
+      app.js
+      app.js.map
+      vendor/
+        search.js
+        search.js.map
+```
 
-License
--------
+## Example
 
-This project is licensed under the terms in the `LICENSE` file in the
-repository root.
+If your source files live in `assets/js` and you want output in `assets/js` inside `_site`:
+
+```yml
+minify_js:
+  entry_dir: assets/js
+  output_dir: assets/js
+  compress: true
+  mangle: true
+  source_map: true
+```
+
+## Development
+
+Install dependencies:
+
+```sh
+bundle install
+```
+
+Run checks:
+
+```sh
+bundle exec rubocop
+```
+
+## License
+
+Released under the MIT License. See `LICENSE.txt`.
