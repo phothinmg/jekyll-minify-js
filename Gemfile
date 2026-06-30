@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rubocop', '~> 1.82', group: :development
-
-gem 'jekyll', '~> 3.10'
-
-gem 'terser', '~> 1.2'
-
-gem 'fileutils', '~> 1.8'
-
-gem 'shellwords', '~> 0.2.2'
-
-gem 'pathname', '~> 0.4.0'
+group :development do
+  gem "irb"
+  gem "rake", "~> 13.0"
+  gem "rbs", ">= 4.0.3"
+  gem "rubocop", "~> 1.21"
+  gem "rufo"
+end

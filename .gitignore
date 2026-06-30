@@ -4,3 +4,6 @@ ptm
 # add bundle source
 vendor/bundle/
 .bundle/
+.yardoc
+.notes.txt
+Gemfile.lock

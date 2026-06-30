@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-<img src="https://github.com/phothinmg/jekykll-pagefind/blob/main/rubygems_logo.png" width="160" height="160" alt="ruby"/>
+<img src="https://pub-c9ba018358dd48a99b70013b65a25e5f.r2.dev/logo/rubygems_logo.webp" width="160" height="160" alt="ruby"/>
 </p>
 <h1 align="center">Jekyll Minify Js</h1>
 
@@ -42,9 +42,10 @@ minify_js:
   enable: true
   entry_dir: js
   output_dir: js
-  compress: true
-  mangle: true
-  source_map: true
+  terser_opts:
+    compress: true
+    mangle: true
+    source_map: true
 ```
 
 ### Options
@@ -110,6 +111,18 @@ Run checks:
 
 ```sh
 bundle exec rubocop
+```
+
+Generate YARD documentation:
+
+```sh
+bundle exec yard doc lib/**/*.rb README.md
+```
+
+Check documentation coverage without generating HTML:
+
+```sh
+bundle exec yard stats lib/**/*.rb
 ```
 
 ## License

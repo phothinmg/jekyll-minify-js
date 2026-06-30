@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 module Jekyll
+  # Namespace for the jekyll-minify-js plugin.
   module MinifyJs
-    VERSION = '0.2.1'
+    # Current gem version.
+    #
+    # @return [String]
+    VERSION = "0.2.1"
   end
 end

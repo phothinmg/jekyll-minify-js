@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+set -vx
+
+bundle config set --local system_gems false
+
+bundle config set --local path "vendor/bundle"
+
+bundle install

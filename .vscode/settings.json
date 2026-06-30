@@ -1,18 +1,19 @@
 {
-  "rubyLsp.formatter": "rubocop",
-  // All of these settings are scoped only to the Ruby language
-  "[ruby]": {
-    "editor.defaultFormatter": "Shopify.ruby-lsp", // Use the Ruby LSP as the default formatter
-    "editor.formatOnSave": true, // Format files automatically when saving
-    "editor.tabSize": 2, // Use 2 spaces for indentation
-    "editor.insertSpaces": true, // Use spaces and not tabs for indentation
-    "editor.semanticHighlighting.enabled": true, // Enable semantic highlighting
-    "editor.formatOnType": true // Enable formatting while typing
+  // Formatting
+  "ruby.format": "rufo",
+  "editor.formatOnSave": true,
+
+  // Run Rufo via Bundler when available
+  "ruby.rufo.useBundler": true,
+
+  // Keep RuboCop linting enabled (optional) and run via Bundler
+  "ruby.lint": {
+    "rubocop": true
   },
-  "rubyLsp.indexing": {
-    "excludedPatterns": ["**/test/**/*.rb"],
-    "excludedGems": ["rubocop", "rubocop-performance"],
-    "excludedMagicComments": ["compiled:true"]
+  "ruby.lint.rubocop": {
+    "useBundler": true,
+    "lintOnSave": true,
+    "config": ".rubocop.yml"
   },
-  "cSpell.words": ["mtimes"]
+  "cSpell.words": ["classnames", "fnames", "yardoc", "yardopts"]
 }
