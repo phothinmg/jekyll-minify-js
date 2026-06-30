@@ -31,3 +31,12 @@ end
 task :publish do
   sh "bash bin/publish"
 end
+
+desc "Release to rubygem.org"
+task :release do
+  puts "Start Building ..."
+  # Run Build
+  Rake::Task[:plugin_build].invoke
+  Rake::Task[:publish].invoke
+  puts "Finished"
+end
