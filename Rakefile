@@ -31,3 +31,24 @@ end
 task :publish do
   sh "bash bin/publish"
 end
+
+# 4. YardDoc
+# ==========
+
+YARD::Rake::YardocTask.new do |t|
+  # Leave t.files empty so it doesn't merge incorrectly
+  t.files = []
+
+  t.options = [
+    "--no-yardopts",
+    "--title", "Jekyll Minify Js",
+    "-p", "yard/templates",
+    "--asset", "yard/assets/favicon.svg:favicon.svg",
+    "lib/**/*.rb",
+    "-o", "docs",
+    "-",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE.txt"
+  ]
+end
