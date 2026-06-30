@@ -1,0 +1,3 @@
+[submodule "terser"]
+	path = terser
+	url = https://github.com/suseejs/terser.git
