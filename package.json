@@ -1,0 +1,31 @@
+{
+  "name": "jekyll-minify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "node tools/build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phothinmg/jekyll-minify-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/phothinmg/jekyll-minify-js/issues"
+  },
+  "homepage": "https://github.com/phothinmg/jekyll-minify-js#readme",
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "terser": "^5.48.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
+  }
+}
