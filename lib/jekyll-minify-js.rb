@@ -114,10 +114,12 @@ module Jekyll
         js_files.each do |src|
           rel = src.sub(/\A#{Regexp.escape(entry_dir_full + File::SEPARATOR)}/, "")
           out = File.join(out_dir, rel)
+          map_name = "#{File.basename(out)}.map"
           src_content = File.read(src)
           result = run_terser(src_content, ts_opts)
           compiled = result["compiled"]
           source_map = result["source_map"]
+          compiled += "\n//# sourceMappingURL=#{map_name}\n" if source_map && !compiled.include?("sourceMappingURL")
           File.write(out, compiled)
           File.write("#{out}.map", source_map) if source_map
         rescue StandardError => e
